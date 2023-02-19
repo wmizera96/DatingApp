@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs;
 
-public record RegisterDto(
+public record LoginDto(
     [Required] string UserName,
     [Required] string Password
 );
