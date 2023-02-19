@@ -3,6 +3,9 @@ using API.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// dotnet ef database drop
+// dontet ef database update
+
 
 builder.Services.AddControllers();
 builder.Services.AddApplicationServices(builder.Configuration);
