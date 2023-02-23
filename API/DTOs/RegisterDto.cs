@@ -4,5 +4,5 @@ namespace API.DTOs;
 
 public record RegisterDto(
     [Required] string UserName,
-    [Required] string Password
+    [StringLength(8, MinimumLength = 4), Required] string Password
 );

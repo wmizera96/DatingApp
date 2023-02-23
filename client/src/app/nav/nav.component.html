@@ -4,21 +4,18 @@
     <ul class="navbar-nav me-auto mb-2 mb-md-0">
       <ng-container *ngIf="accountService.currentUser$ | async">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/members" routerLinkActive="active"
-            >Matches</a
-          >
+          <a class="nav-link" routerLink="/members" routerLinkActive="active">Matches</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/lists" routerLinkActive="active"
-            >Lists</a
-          >
+          <a class="nav-link" routerLink="/lists" routerLinkActive="active">Lists</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/messages" routerLinkActive="active"
-            >Messages</a
-          >
+          <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
         </li>
       </ng-container>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/errors" routerLinkActive="active">Errors</a>
+      </li>
     </ul>
 
     <div
@@ -27,7 +24,7 @@
       dropdown
     >
       <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle
-        >Welcome {{ user.userName | titlecase }}
+      >Welcome {{ user.userName | titlecase }}
         <div class="dropdown-menu mt-3" *dropdownMenu>
           <a class="dropdown-item">Edit profile</a>
           <a class="dropdown-item" (click)="logout()">Logout</a>
