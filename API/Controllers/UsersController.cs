@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using API.DTOs;
 using API.Interfaces;
 using AutoMapper;
@@ -30,5 +31,22 @@ public class UsersController : BaseApiController
     {
         var user = await _userRepository.GetMemberAsync(userName);
         return Ok(user);
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
+    {
+        var userName = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var user = await _userRepository.GetUserByUsername(userName);
+
+        if (user is null)
+            return NotFound();
+
+        _mapper.Map(memberUpdateDto, user);
+
+        if (await _userRepository.SaveAllAsync())
+            return NoContent();
+
+        return BadRequest("Failed to update user");
     }
 }
