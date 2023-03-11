@@ -1,4 +1,5 @@
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,16 @@ public static class ApplicationServiceExtensions
     {
         services.AddDbContext<DataContext>(opt =>
         {
-            opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
+            // using SqlServer because of probelms with Sqlite
+            // opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
+            opt.UseSqlServer(config.GetConnectionString("SqlServer"));
         });
         services.AddCors();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+        services.AddScoped<IPhotoService, PhotoService>();
         return services;
     }
 }

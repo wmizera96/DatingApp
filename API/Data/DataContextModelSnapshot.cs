@@ -3,11 +3,12 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace API.Data.Migrations
+namespace API.Data
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -15,52 +16,58 @@ namespace API.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.2");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("API.Entities.AppUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("TEXT");
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Gender")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Interests")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Introduction")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("KnownAs")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("LastActive")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("LookingFor")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("PasswordHash")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
-                        .HasColumnType("BLOB");
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -69,20 +76,23 @@ namespace API.Data.Migrations
 
             modelBuilder.Entity("API.Entities.Photo", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AppUserId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsMain")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bit");
 
                     b.Property<string>("PublicId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Url")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
