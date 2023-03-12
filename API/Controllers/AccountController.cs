@@ -4,6 +4,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +14,12 @@ public class AccountController : BaseApiController
 {
     private readonly DataContext _dataContext;
     private readonly ITokenService _tokenService;
-    
-    public AccountController(DataContext dataContext, ITokenService tokenService)
+    private readonly IMapper _mapper;
+
+    public AccountController(DataContext dataContext, ITokenService tokenService, IMapper mapper)
     {
         _tokenService = tokenService;
+        _mapper = mapper;
         _dataContext = dataContext;
     }
 
@@ -29,19 +32,18 @@ public class AccountController : BaseApiController
             return BadRequest("Username is taken");
         }
 
+        var user = _mapper.Map<AppUser>(registerDto);
+        
         using var hmac = new HMACSHA512();
 
-        var user = new AppUser
-        {
-            UserName = registerDto.UserName.ToLower(),
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-            PasswordSalt = hmac.Key
-        };
+        user.UserName = registerDto.UserName.ToLower();
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+        user.PasswordSalt = hmac.Key;
 
         _dataContext.Add(user);
         await _dataContext.SaveChangesAsync(cancellationToken);
 
-        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url);
+        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url, user.KnownAs);
     }
 
 
@@ -63,7 +65,7 @@ public class AccountController : BaseApiController
                 return Unauthorized("Invalid password");
         }
 
-        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url);
+        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url, user.KnownAs);
     }
 
 
