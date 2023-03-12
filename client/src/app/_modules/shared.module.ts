@@ -5,6 +5,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { NgxGalleryModule } from '@kolkov/ngx-gallery';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { FileUploadModule } from 'ng2-file-upload';
 
 // flat structure - no parent folder - generated with
 // ng g m _modules/shared --flat
@@ -22,6 +23,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     NgxSpinnerModule.forRoot({
       type: 'line-scale-party',
     }),
+    FileUploadModule,
   ],
   exports: [
     BsDropdownModule,
@@ -29,6 +31,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     TabsModule,
     NgxGalleryModule,
     NgxSpinnerModule,
+    FileUploadModule,
   ],
 })
 export class SharedModule {}

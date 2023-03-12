@@ -1,3 +1,3 @@
 namespace API.DTOs;
 
-public record UserDto(string UserName, string token);
+public record UserDto(string UserName, string Token, string PhotoUrl);

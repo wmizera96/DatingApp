@@ -41,14 +41,14 @@ public class AccountController : BaseApiController
         _dataContext.Add(user);
         await _dataContext.SaveChangesAsync(cancellationToken);
 
-        return new UserDto(user.UserName, _tokenService.CreateToken(user));
+        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url);
     }
 
 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto, CancellationToken cancellationToken)
     {
-        var user = await _dataContext.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.UserName, cancellationToken);
+        var user = await _dataContext.Users.Include(x => x.Photos).SingleOrDefaultAsync(x => x.UserName == loginDto.UserName, cancellationToken);
 
         if (user is null)
             return Unauthorized("Invalid user name");
@@ -63,7 +63,7 @@ public class AccountController : BaseApiController
                 return Unauthorized("Invalid password");
         }
 
-        return new UserDto(user.UserName, _tokenService.CreateToken(user));
+        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url);
     }
 
 
