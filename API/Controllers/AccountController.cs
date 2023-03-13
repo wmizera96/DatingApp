@@ -43,7 +43,7 @@ public class AccountController : BaseApiController
         _dataContext.Add(user);
         await _dataContext.SaveChangesAsync(cancellationToken);
 
-        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url, user.KnownAs);
+        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url, user.KnownAs, user.Gender);
     }
 
 
@@ -65,7 +65,7 @@ public class AccountController : BaseApiController
                 return Unauthorized("Invalid password");
         }
 
-        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url, user.KnownAs);
+        return new UserDto(user.UserName, _tokenService.CreateToken(user), user.Photos.FirstOrDefault(x => x.IsMain)?.Url, user.KnownAs, user.Gender);
     }
 
 
