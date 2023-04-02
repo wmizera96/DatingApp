@@ -83,4 +83,31 @@ public class MessageRepository : IMessageRepository
     {
         return await _dataContext.SaveChangesAsync() > 0;
     }
+
+    public void AddGroup(Group group)
+    {
+        _dataContext.Add(group);
+    }
+
+    public void RemoveConnection(Connection connection)
+    {
+        _dataContext.Connections.Remove(connection);
+    }
+
+    public async Task<Connection> GetConnection(string connectionId)
+    {
+        return await _dataContext.Connections.FindAsync(connectionId);
+    }
+
+    public async Task<Group> GetMessageGroup(string groupName)
+    {
+        return await _dataContext.Groups.Include(x => x.Connections).FirstOrDefaultAsync(x => x.Name == groupName);
+    }
+
+    public async Task<Group> GetGroupForConnection(string connectionId)
+    {
+        return await _dataContext.Groups
+            .Include(x => x.Connections)
+            .FirstOrDefaultAsync(x => x.Connections.Any(c => c.ConnectionId == connectionId));
+    }
 }

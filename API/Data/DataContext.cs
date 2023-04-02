@@ -8,9 +8,10 @@ namespace API.Data
 {
     public class DataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
-        public DbSet<UserLike> Likes { get; set; }
-        public DbSet<Message> Messages { get; set; }
-
+        public DbSet<UserLike> Likes => Set<UserLike>();
+        public DbSet<Message> Messages => Set<Message>();
+        public DbSet<Group> Groups => Set<Group>();
+        public DbSet<Connection> Connections => Set<Connection>();
         public DataContext(DbContextOptions options) : base(options)
         {
         }

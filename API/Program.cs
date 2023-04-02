@@ -2,6 +2,7 @@ using API.Data;
 using API.Entities;
 using API.Extensions;
 using API.Middleware;
+using API.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,13 +22,19 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
-app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
+app.UseCors(builder => builder
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials() // this is needed to allow SignalR to authenticate to the server
+    .WithOrigins("https://localhost:4200"));
 
 // need to be before MapControllers and after UseCors
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<PresenceHub>("hubs/presence");
+app.MapHub<MessageHub>("hubs/message");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
@@ -38,6 +45,9 @@ try
     var context = services.GetRequiredService<DataContext>();
     // creates and updates database on app start
     await context.Database.MigrateAsync();
+    
+    // clear connection when restarting the app, carefull!!!
+    await context.Database.ExecuteSqlRawAsync("TRUNCATE TABLE [Connections]");
     await Seed.SeedUsers(userManager, roleManager);
 }
 catch (Exception ex)

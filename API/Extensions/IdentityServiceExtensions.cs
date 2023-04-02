@@ -28,6 +28,24 @@ public static class IdentityServiceExtensions
                     ValidateIssuer = false, // it's good, but not added to the token in this course
                     ValidateAudience = false // it's good, but not added to the token in this course
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        // this is defined in SignalR, name of the param can not be changed
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+                        {
+                            // give SignalR access to the token so that we can authenticate users
+                            context.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         services.AddAuthorization(opt =>
