@@ -3,7 +3,6 @@ using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using API.SignalR;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Extensions;
 
@@ -11,12 +10,6 @@ public static class ApplicationServiceExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
     {
-        services.AddDbContext<DataContext>(opt =>
-        {
-            // using SqlServer because of probelms with Sqlite
-            // opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
-            opt.UseSqlServer(config.GetConnectionString("SqlServer"));
-        });
         services.AddCors();
         services.AddScoped<ITokenService, TokenService>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
