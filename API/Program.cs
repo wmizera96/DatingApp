@@ -19,6 +19,9 @@ var builder = WebApplication.CreateBuilder(args);
 // fly secrets set my__secret=my-secret
 // fly deploy
 
+// proxy port 5432 from container in fly.io to localhost:6543 e.g. enables connect to database from localhost
+// fly proxy 6543:5432 -a my-container
+
 // password generator
 // https://delinea.com/resources/password-generator-it-tool
 

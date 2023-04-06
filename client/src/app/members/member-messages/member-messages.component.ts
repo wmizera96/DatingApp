@@ -18,16 +18,17 @@ export class MemberMessagesComponent {
   @ViewChild('messageForm') messageForm?: NgForm;
 
   messageContent = '';
-
+  loading = false;
   constructor(public messageService: MessageService) {}
 
   sendMessage() {
     if (!this.userName) return;
 
+    this.loading = true;
     this.messageService
       .sendMessage(this.userName, this.messageContent)
       .then(() => {
         this.messageForm?.reset();
-      });
+      }).finally(() => (this.loading = false));
   }
 }
